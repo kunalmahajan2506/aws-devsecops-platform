@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-devops-platform
+  namespace: cloud-devops
+spec:
+  selector:
+    app: cloud-devops-platform
+
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+
+  type: NodePort
