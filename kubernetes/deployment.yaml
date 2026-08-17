@@ -18,9 +18,9 @@ spec:
     spec:
       containers:
         - name: cloud-devops-platform
-          image: cloud-devops-platform:1.0
+          image: 113732353582.dkr.ecr.ap-south-1.amazonaws.com/cloud-devops-platform:latest
 
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
 
           ports:
             - containerPort: 5000
