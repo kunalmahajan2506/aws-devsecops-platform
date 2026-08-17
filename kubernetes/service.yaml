@@ -8,8 +8,9 @@ spec:
     app: cloud-devops-platform
 
   ports:
-    - protocol: TCP
-      port: 80
+    - name: http
+      protocol: TCP
+      port: 8080
       targetPort: 5000
 
   type: NodePort
