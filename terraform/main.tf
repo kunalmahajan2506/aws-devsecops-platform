@@ -66,6 +66,7 @@ resource "aws_route_table_association" "public" {
 }
 resource "aws_ecr_repository" "app" {
   name                 = var.project_name
+  force_delete=true
   image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
@@ -74,5 +75,52 @@ resource "aws_ecr_repository" "app" {
 
   tags = {
     Project = var.project_name
+  }
+}
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 21.0"
+
+  name               = "cloud-devops-platform"
+  kubernetes_version = "1.33"
+
+  endpoint_public_access = true
+
+  vpc_id     = aws_vpc.main.id
+  subnet_ids = aws_subnet.public[*].id
+
+  enable_irsa = true
+
+  addons = {
+    vpc-cni = {
+      most_recent  = true
+      before_compute = true
+    }
+
+    kube-proxy = {
+      most_recent = true
+    }
+
+    coredns = {
+      most_recent = true
+    }
+  }
+
+  eks_managed_node_groups = {
+    main = {
+      instance_types = ["t3.small"]
+
+      min_size     = 1
+      max_size     = 2
+      desired_size = 1
+
+      capacity_type = "ON_DEMAND"
+    }
+  }
+
+  tags = {
+    Project     = "cloud-devops-platform"
+    Environment = "dev"
+    ManagedBy   = "Terraform"
   }
 }
